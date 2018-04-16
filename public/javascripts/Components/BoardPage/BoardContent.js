@@ -2,10 +2,10 @@ export default class BoardContent {
   constructor(props) {
     this.props = props;
 
-    this.render = this.render.bind(this);
-    this.bindEventListeners = this.bindEventListeners.bind(this);
+    this.render               = this.render.bind(this);
+    this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
-    this.setupComponent = this.setupComponent.bind(this);
+    this.setupComponent       = this.setupComponent.bind(this);
 
     this.setupComponent();
   }

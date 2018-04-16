@@ -1,4 +1,5 @@
-import { BoardHeader, BoardContent } from '.';
+import { BoardContent } from '.';
+import { BoardHeader, ForumHeader } from '../Headers';
 import { getBoardAPI } from '../../services/api/boards';
 
 export default class BoardIndex {
@@ -8,11 +9,11 @@ export default class BoardIndex {
       children: []
     };
 
-    this.render = this.render.bind(this);
-    this.bindEventListeners = this.bindEventListeners.bind(this);
+    this.render               = this.render.bind(this);
+    this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
-    this.fetchBoard = this.fetchBoard.bind(this);
-    this.setupComponent = this.setupComponent.bind(this);
+    this.fetchBoard           = this.fetchBoard.bind(this);
+    this.setupComponent       = this.setupComponent.bind(this);
 
     this.setupComponent();
   }
@@ -52,17 +53,17 @@ export default class BoardIndex {
   }
 
   render() {
-    const main = document.getElementById('main');
-    const content = `
-      <div>
-        <div id="board_header">
-          <p>Loading...</p>
-        </div>
-        <section id="board_content">
-        </section>
-      </div>
+    const header = document.getElementById('page_header');
+    const main   = document.getElementById('main');
+    const headerContent = `
+      <p>Loading...</p>
+    `;
+    const mainContent = `
+      <section id="board_content">
+      </section>
     `;
 
-    main.innerHTML = content;
+    header.innerHTML = headerContent;
+    main.innerHTML   = mainContent;
   }
 }

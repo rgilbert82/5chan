@@ -2,10 +2,10 @@ export default class BoardHeader {
   constructor(props) {
     this.props = props;
 
-    this.render = this.render.bind(this);
-    this.bindEventListeners = this.bindEventListeners.bind(this);
+    this.render               = this.render.bind(this);
+    this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
-    this.setupComponent = this.setupComponent.bind(this);
+    this.setupComponent       = this.setupComponent.bind(this);
 
     this.setupComponent();
   }
@@ -23,10 +23,10 @@ export default class BoardHeader {
   }
 
   render() {
-    const parent = document.getElementById('board_header');
+    const parent  = document.getElementById('page_header');
     const content = `
       <div>
-        <h2>${this.props.board.title}</h2>
+        <h2>/${this.props.board.slug}/ - ${this.props.board.title}</h2>
       </div>
     `
 

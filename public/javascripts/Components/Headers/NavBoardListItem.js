@@ -1,4 +1,4 @@
-export default class MainBoardListItem {
+export default class NavBoardListItem {
   constructor(props) {
     this.props = props;
     this.state = {
@@ -16,7 +16,7 @@ export default class MainBoardListItem {
 
   setupComponent() {
     if (this.state.board) {
-      this.state.componentID = `main_board_list_item_${this.state.board.slug}`;
+      this.state.componentID = `header_nav_list_item_${this.state.board.slug}`;
       this.render();
       this.bindEventListeners();
     }
@@ -34,17 +34,21 @@ export default class MainBoardListItem {
 
   navigateToLink(e) {
     e.preventDefault();
-    let path = `/boards/${e.target.id.replace('main_board_list_item_', '')}`;
-    this.props.navigate(path);
+    if (!!this.state.board.home) {
+      this.props.navigate('/');
+    } else {
+      let path = `/boards/${e.target.id.replace('header_nav_list_item_', '')}`;
+      this.props.navigate(path);
+    }
   }
 
   render() {
-    const parent = document.getElementById('index_boards_list');
+    const parent = document.getElementById('header_nav_list');
     const child  = document.createElement('LI');
 
-    child.className = 'main_board_list_item';
+    child.className = 'header_nav_list_item';
     child.innerHTML = `
-      <a id="${this.state.componentID}" href="#">${this.state.board.title}</a>
+      <a id="${this.state.componentID}" href="#">${this.state.board.slug}</a>
     `;
 
     parent.appendChild(child);

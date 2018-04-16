@@ -1,15 +1,19 @@
 import { MessageBox } from '.';
+import { HeaderNav } from '../Components/Headers';
 import { IndexMain } from '../Components/IndexPage';
 import { BoardIndex } from '../Components/BoardPage';
 
 export default class Router {
   constructor() {
-    this.currentPage = null;
+    this.currentPage    = null;
+    this.headerNav      = null;
 
-    this.bindEvents = this.bindEvents.bind(this);
-    this.loadPage = this.loadPage.bind(this);
-    this.navigate = this.navigate.bind(this);
-    this.displayMessage = this.displayMessage.bind(this);
+    this.bindEvents      = this.bindEvents.bind(this);
+    this.loadPage        = this.loadPage.bind(this);
+    this.navigate        = this.navigate.bind(this);
+    this.displayMessage  = this.displayMessage.bind(this);
+    this.setupHeaderNav  = this.setupHeaderNav.bind(this);
+    this.removeHeaderNav = this.removeHeaderNav.bind(this);
 
     this.bindEvents();
   }
@@ -22,6 +26,25 @@ export default class Router {
 
   displayMessage(message) {
     new MessageBox({ message: message });
+  }
+
+  setupHeaderNav() {
+    const pageProps = {
+      navigate: this.navigate,
+      displayMessage: this.displayMessage
+    }
+
+    if (!this.headerNav) {
+      this.headerNav = new HeaderNav(pageProps);
+    }
+  }
+
+  removeHeaderNav() {
+    if (this.headerNav) {
+      this.headerNav.removeEventListeners();
+      this.headerNav = null;
+      document.getElementById('header_nav').innerHTML = '';
+    }
   }
 
   navigate(path) {
@@ -41,8 +64,10 @@ export default class Router {
     }
 
     if (path === '/') {
+      this.removeHeaderNav();
       this.currentPage = new IndexMain(pageProps);
     } else if (path.match(/^\/boards\/\w+$/)) {
+      this.setupHeaderNav();
       this.currentPage = new BoardIndex(pageProps);
     }
   }

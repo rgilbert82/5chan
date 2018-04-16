@@ -1,7 +1,7 @@
 export default class MessageBox {
   constructor(props) {
-    this.props = props;
-    this.render = this.render.bind(this);
+    this.props          = props;
+    this.render         = this.render.bind(this);
     this.setupComponent = this.setupComponent.bind(this);
 
     this.setupComponent();
@@ -12,7 +12,7 @@ export default class MessageBox {
   }
 
   render() {
-    const parent = document.getElementById('message_box');
+    const parent  = document.getElementById('message_box');
     const content = `
       <div>
         <h2>${this.props.message}</h2>

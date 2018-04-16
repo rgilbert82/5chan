@@ -1,18 +1,17 @@
-import { MainBoardListItem } from '.';
+import { NavBoardListItem } from '.';
 import { getBoardsAPI } from '../../services/api/boards';
 
-export default class MainBoardsList {
+export default class HeaderNav {
   constructor(props) {
     this.props = props;
     this.state = {
       boards: [],
       boardComponents: []
-    }
+    };
 
     this.render               = this.render.bind(this);
     this.fetchBoards          = this.fetchBoards.bind(this);
     this.renderBoardListItems = this.renderBoardListItems.bind(this);
-    this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
 
@@ -22,10 +21,6 @@ export default class MainBoardsList {
   setupComponent() {
     this.render();
     this.fetchBoards();
-  }
-
-  bindEventListeners() {
-    // todo
   }
 
   removeEventListeners() {
@@ -48,25 +43,28 @@ export default class MainBoardsList {
     let boardComponents = [];
 
     this.state.boards.forEach((board) => {
-      const props = {
+      boardComponents.push(new NavBoardListItem({
         navigate: this.props.navigate,
         displayMessage: this.props.displayMessage,
         board: board
-      };
-
-      boardComponents.push(new MainBoardListItem(props));
+      }));
     });
+
+    boardComponents.push(new NavBoardListItem({
+      navigate: this.props.navigate,
+      displayMessage: this.props.displayMessage,
+      board: { slug: 'home', home: true }
+    }));
 
     this.state.boardComponents = boardComponents;
   }
 
   render() {
-    const parent  = document.getElementById('index_boards');
-    const content = `
-      <ul id="index_boards_list">
-      </ul>
+    const headerNav = document.getElementById('header_nav');
+    const content   = `
+      <ul id="header_nav_list"></ul>
     `;
 
-    parent.innerHTML = content;
+    headerNav.innerHTML = content;
   }
 }

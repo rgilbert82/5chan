@@ -1,4 +1,5 @@
 import { MainBoardsList } from '.';
+import { IndexHeader } from '../Headers';
 
 export default class IndexMain {
   constructor(props) {
@@ -7,15 +8,15 @@ export default class IndexMain {
       childComponents: []
     }
 
-    this.render = this.render.bind(this);
-    this.bindEventListeners = this.bindEventListeners.bind(this);
+    this.render               = this.render.bind(this);
+    this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
-    this.setupComponent = this.setupComponent.bind(this);
+    this.setupPage            = this.setupPage.bind(this);
 
-    this.setupComponent();
+    this.setupPage();
   }
 
-  setupComponent() {
+  setupPage() {
     const props = {
       navigate: this.props.navigate,
       displayMessage: this.props.displayMessage
@@ -23,7 +24,9 @@ export default class IndexMain {
 
     this.render();
     this.bindEventListeners();
-    this.state.childComponents = this.state.childComponents.concat([ new MainBoardsList(props) ]);
+    this.state.childComponents = this.state.childComponents.concat(
+      [ new IndexHeader(), new MainBoardsList(props) ]
+    );
   }
 
   bindEventListeners() {
@@ -37,7 +40,7 @@ export default class IndexMain {
   }
 
   render() {
-    const main = document.getElementById('main');
+    const main    = document.getElementById('main');
     const content = `
       <h2>Index Page</h2>
       <div id="index_boards">

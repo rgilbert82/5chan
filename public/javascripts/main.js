@@ -2,7 +2,7 @@ import { Router } from './App';
 
 export default class MainApp {
   constructor() {
-    this.router = new Router();
+    this.router   = new Router();
     this.setupApp = this.setupApp.bind(this);
     this.setupApp();
   }
