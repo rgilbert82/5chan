@@ -1,11 +1,29 @@
+import { MainBoardsList } from '.';
+
 export default class IndexMain {
-  constructor() {
+  constructor(props) {
+    this.props = props;
+    this.state = {
+      childComponents: []
+    }
+
     this.render = this.render.bind(this);
     this.bindEventListeners = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
+    this.setupComponent = this.setupComponent.bind(this);
+
+    this.setupComponent();
+  }
+
+  setupComponent() {
+    const props = {
+      navigate: this.props.navigate,
+      displayMessage: this.props.displayMessage
+    };
 
     this.render();
     this.bindEventListeners();
+    this.state.childComponents = this.state.childComponents.concat([ new MainBoardsList(props) ]);
   }
 
   bindEventListeners() {
@@ -13,7 +31,9 @@ export default class IndexMain {
   }
 
   removeEventListeners() {
-    // todo
+    this.state.childComponents.forEach((child) => {
+      child.removeEventListeners();
+    });
   }
 
   render() {

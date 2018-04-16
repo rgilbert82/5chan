@@ -1,18 +1,14 @@
 import { Router } from './App';
-import { MainTemplate } from './Containers';
 
 export default class MainApp {
   constructor() {
     this.router = new Router();
-
-    this.navigateToLink = this.navigateToLink.bind(this);
-
-    this.mainTemplate = new MainTemplate();
-    this.router.loadPage();
+    this.setupApp = this.setupApp.bind(this);
+    this.setupApp();
   }
 
-  navigateToLink() {
-    // todo
+  setupApp() {
+    this.router.loadPage();
   }
 }
 

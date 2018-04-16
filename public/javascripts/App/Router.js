@@ -1,4 +1,6 @@
+import { MessageBox } from '.';
 import { IndexMain } from '../Components/IndexPage';
+import { BoardIndex } from '../Components/BoardPage';
 
 export default class Router {
   constructor() {
@@ -7,6 +9,7 @@ export default class Router {
     this.bindEvents = this.bindEvents.bind(this);
     this.loadPage = this.loadPage.bind(this);
     this.navigate = this.navigate.bind(this);
+    this.displayMessage = this.displayMessage.bind(this);
 
     this.bindEvents();
   }
@@ -17,20 +20,30 @@ export default class Router {
     window.addEventListener("popstate", this.loadPage);
   }
 
+  displayMessage(message) {
+    new MessageBox({ message: message });
+  }
+
   navigate(path) {
     history.pushState({}, path, path);
     this.loadPage();
   }
 
   loadPage() {
+    const path = location.pathname;
+    const pageProps = {
+      navigate: this.navigate,
+      displayMessage: this.displayMessage
+    }
+
     if (this.currentPage) {
       this.currentPage.removeEventListeners();
     }
 
-    switch(location.pathname) {
-      case '/':
-        this.currentPage = new IndexMain();
-        break;
+    if (path === '/') {
+      this.currentPage = new IndexMain(pageProps);
+    } else if (path.match(/^\/boards\/\w+$/)) {
+      this.currentPage = new BoardIndex(pageProps);
     }
   }
 }
