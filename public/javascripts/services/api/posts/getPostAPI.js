@@ -1,6 +1,6 @@
-export default () => {
+export default (postSlug) => {
   return new Promise((resolve, reject) => {
-    const path  = "/api/boards";
+    const path  = `/api/posts/${postSlug}`;
     let request = new XMLHttpRequest();
 
     request.onreadystatechange = () => {

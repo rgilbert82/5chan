@@ -1,5 +1,5 @@
 import { MainBoardsList } from '.';
-import { IndexHeader } from '../Headers';
+import { IndexHeader }    from '../Headers';
 
 export default class IndexMain {
   constructor(props) {
@@ -9,7 +9,6 @@ export default class IndexMain {
     }
 
     this.render               = this.render.bind(this);
-    this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
     this.setupPage            = this.setupPage.bind(this);
 
@@ -23,14 +22,9 @@ export default class IndexMain {
     };
 
     this.render();
-    this.bindEventListeners();
     this.state.childComponents = this.state.childComponents.concat(
       [ new IndexHeader(), new MainBoardsList(props) ]
     );
-  }
-
-  bindEventListeners() {
-    // todo
   }
 
   removeEventListeners() {
@@ -47,6 +41,7 @@ export default class IndexMain {
       </div>
     `;
 
+    document.title = '5chan';
     main.innerHTML = content;
   }
 }

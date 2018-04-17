@@ -1,5 +1,5 @@
 import { MainBoardListItem } from '.';
-import { getBoardsAPI } from '../../services/api/boards';
+import { getBoardsAPI }      from '../../services/api/boards';
 
 export default class MainBoardsList {
   constructor(props) {
@@ -12,7 +12,6 @@ export default class MainBoardsList {
     this.render               = this.render.bind(this);
     this.fetchBoards          = this.fetchBoards.bind(this);
     this.renderBoardListItems = this.renderBoardListItems.bind(this);
-    this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
 
@@ -22,10 +21,6 @@ export default class MainBoardsList {
   setupComponent() {
     this.render();
     this.fetchBoards();
-  }
-
-  bindEventListeners() {
-    // todo
   }
 
   removeEventListeners() {

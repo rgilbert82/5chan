@@ -1,17 +1,20 @@
-import { BoardContent }             from '.';
-import { BoardHeader, ForumHeader } from '../Headers';
-import { getBoardAPI }              from '../../services/api/boards';
+import { PostHeader }  from '../Headers';
+import { PostContent } from '../Posts';
+import { getPostAPI }  from '../../services/api/posts';
 
-export default class BoardIndex {
+export default class PostPage {
   constructor(props) {
     this.props = props;
     this.state = {
+      post: {},
+      board: {},
       children: []
     };
 
     this.render               = this.render.bind(this);
+    this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
-    this.fetchBoard           = this.fetchBoard.bind(this);
+    this.fetchPost            = this.fetchPost.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
 
     this.setupComponent();
@@ -19,7 +22,11 @@ export default class BoardIndex {
 
   setupComponent() {
     this.render();
-    this.fetchBoard();
+    this.fetchPost();
+  }
+
+  bindEventListeners() {
+    // todo
   }
 
   removeEventListeners() {
@@ -30,18 +37,22 @@ export default class BoardIndex {
     this.state.children = [];
   }
 
-  fetchBoard() {
-    const boardSlug = location.pathname.replace('/boards/', '');
-    return getBoardAPI(boardSlug)
+  fetchPost() {
+    const postSlug = location.pathname.replace(/^\/boards\/\w+\/thread\//, '');
+
+    return getPostAPI(postSlug)
       .then((data) => {
         const props   = {
-          board: data,
+          post: data.post,
+          board: data.board,
           navigate: this.props.navigate,
           displayMessage: this.props.displayMessage
         }
-        const header  = new BoardHeader(props);
-        const content = new BoardContent(props);
+        const header  = new PostHeader(props);
+        const content = new PostContent(props);
 
+        this.state.post     = data.post;
+        this.state.board    = data.board;
         this.state.children = this.state.children.concat([ header, content ]);
       }).catch((err) => {
         this.props.displayMessage('There was an error loading this page');
@@ -49,18 +60,19 @@ export default class BoardIndex {
   }
 
   render() {
-    const boardSlug = location.pathname.replace('/boards/', '');
+    const boardSlug = location.pathname.replace(/^\/boards\//, '').replace(/\/thread\/.+/, '');;
+    const postSlug  = location.pathname.replace(/^\/boards\/\w+\/thread\//, '');
     const header    = document.getElementById('page_header');
     const main      = document.getElementById('main');
     const headerContent = `
       <p>Loading...</p>
     `;
     const mainContent = `
-      <section id="board_content">
+      <section id="page_content">
       </section>
     `;
 
-    document.title   = `5chan - /${boardSlug}/`;
+    document.title   = `/${boardSlug}/ - /${postSlug}/`;
     header.innerHTML = headerContent;
     main.innerHTML   = mainContent;
   }

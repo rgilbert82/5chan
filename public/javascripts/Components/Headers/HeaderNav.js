@@ -1,5 +1,5 @@
 import { NavBoardListItem } from '.';
-import { getBoardsAPI } from '../../services/api/boards';
+import { getBoardsAPI }     from '../../services/api/boards';
 
 export default class HeaderNav {
   constructor(props) {

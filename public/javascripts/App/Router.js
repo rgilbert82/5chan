@@ -1,16 +1,18 @@
 import { MessageBox } from '.';
-import { HeaderNav } from '../Components/Headers';
-import { IndexMain } from '../Components/IndexPage';
+import { HeaderNav }  from '../Components/Headers';
+import { IndexMain }  from '../Components/IndexPage';
 import { BoardIndex } from '../Components/BoardPage';
+import { PostPage }   from '../Components/Posts';
 
 export default class Router {
   constructor() {
-    this.currentPage    = null;
-    this.headerNav      = null;
+    this.currentPage     = null;
+    this.headerNav       = null;
 
     this.bindEvents      = this.bindEvents.bind(this);
     this.loadPage        = this.loadPage.bind(this);
     this.navigate        = this.navigate.bind(this);
+    this.redirectHome    = this.redirectHome.bind(this);
     this.displayMessage  = this.displayMessage.bind(this);
     this.setupHeaderNav  = this.setupHeaderNav.bind(this);
     this.removeHeaderNav = this.removeHeaderNav.bind(this);
@@ -52,10 +54,16 @@ export default class Router {
     this.loadPage();
   }
 
+  redirectHome() {
+    history.replaceState({}, '/', '/');
+    this.loadPage();
+  }
+
   loadPage() {
     const path = location.pathname;
     const pageProps = {
       navigate: this.navigate,
+      redirectHome: this.redirectHome,
       displayMessage: this.displayMessage
     }
 
@@ -63,12 +71,17 @@ export default class Router {
       this.currentPage.removeEventListeners();
     }
 
-    if (path === '/') {
+    if (path === '/') {                                         // Home
       this.removeHeaderNav();
       this.currentPage = new IndexMain(pageProps);
-    } else if (path.match(/^\/boards\/\w+$/)) {
+    } else if (path.match(/^\/boards\/\w+$/)) {                 // Board Page
       this.setupHeaderNav();
       this.currentPage = new BoardIndex(pageProps);
+    } else if (path.match(/^\/boards\/\w+\/thread\/\w+$/)) {    // Post Page
+      this.setupHeaderNav();
+      this.currentPage = new PostPage(pageProps);
+    } else {                                                    // Redirect home for bad routes
+      this.redirectHome();
     }
   }
 }

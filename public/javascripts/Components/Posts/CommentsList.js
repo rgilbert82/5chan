@@ -1,5 +1,5 @@
 import { CommentListItem } from '.';
-import { getCommentsAPI } from '../../services/api/comments';
+import { getCommentsAPI }  from '../../services/api/comments';
 
 export default class CommentsList {
   constructor(props) {

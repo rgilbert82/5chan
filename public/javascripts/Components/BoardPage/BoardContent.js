@@ -1,5 +1,5 @@
 import { PostListItem } from '../Posts';
-import { getPostsAPI } from '../../services/api/posts';
+import { getPostsAPI }  from '../../services/api/posts';
 
 export default class BoardContent {
   constructor(props) {
@@ -11,7 +11,6 @@ export default class BoardContent {
 
     this.render               = this.render.bind(this);
     this.renderPosts          = this.renderPosts.bind(this);
-    this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
     this.fetchPosts           = this.fetchPosts.bind(this);
     this.nothingHere          = this.nothingHere.bind(this);
@@ -23,10 +22,6 @@ export default class BoardContent {
   setupComponent() {
     this.render();
     this.fetchPosts();
-  }
-
-  bindEventListeners() {
-    // todo
   }
 
   removeEventListeners() {

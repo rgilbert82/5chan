@@ -10,6 +10,7 @@ export default class PostListItem {
     this.render               = this.render.bind(this);
     this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
+    this.navigateToPostPage   = this.navigateToPostPage.bind(this);
     this.setupCommentsList    = this.setupCommentsList.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
 
@@ -18,14 +19,19 @@ export default class PostListItem {
 
   setupComponent() {
     this.render();
+    this.bindEventListeners();
     this.setupCommentsList();
   }
 
   bindEventListeners() {
-    // todo
+    const replyLink = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('post_reply_link')[0];
+    replyLink.addEventListener('click', this.navigateToPostPage);
   }
 
   removeEventListeners() {
+    const replyLink = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('post_reply_link')[0];
+    replyLink.removeEventListener('click', this.navigateToPostPage);
+
     this.state.children.forEach((child) => {
       child.removeEventListeners();
     });
@@ -44,6 +50,13 @@ export default class PostListItem {
     ]);
   }
 
+  navigateToPostPage(e) {
+    e.preventDefault();
+
+    const path = `${location.pathname}/thread/${this.props.post.slug}`;
+    this.props.navigate(path);
+  }
+
   render() {
     const parent = document.getElementById('board_posts_list');
     const date   = new Date(this.props.post.created_at).toUTCString();
@@ -55,7 +68,10 @@ export default class PostListItem {
       <div>
         <div class="post_list_item_header_bar"></div>
         <div class="inner_post">
-          <h3><b>${this.props.post.username}</b> on <small>${date}</small></h3>
+          <div>
+            <h3><b>${this.props.post.username}</b> on <small>${date}</small></h3>
+            <span class="post_reply_link_wrapper">[<a class="post_reply_link" href="#">reply</a>]</span>
+          </div>
           <p>${this.props.post.body}</p>
           <div class="comments_list_wrapper"></div>
         </div>

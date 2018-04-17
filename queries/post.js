@@ -1,4 +1,5 @@
 var db = require('../database.js');
+var async = require('async');
 var randomString = require('../helpers/randomString.js');
 
 //=============================================================================
@@ -7,15 +8,39 @@ var randomString = require('../helpers/randomString.js');
 
 function getPost(req, res, next) {
   var postSlug = req.params.slug;
-  var sql = "SELECT * FROM posts WHERE slug = $1;";
 
-  db.one(sql, [postSlug])
-    .then(function(data) {
+  async.waterfall([
+    // Get Post
+    function(callback) {
+      var sql = "SELECT * FROM posts WHERE slug = $1;";
+      db.one(sql, [postSlug])
+        .then(function(data) {
+          callback(null, data);
+        }).catch(function(err) {
+          callback(err, null);
+        });
+    },
+    // Then get the post's board
+    function(post, callback) {
+      var sql  = "SELECT * FROM boards WHERE id = $1;";
+      var data = { post: post };
+      db.one(sql, [post.board_id])
+        .then(function(boardData) {
+          data.board = boardData;
+          callback(null, data);
+        }).catch(function(err) {
+          callback(err, null);
+        });
+    }
+  ],
+  function(err, results) {
+    if (err) {
+      return next(err);
+    } else {
       res.status(200)
-        .json(data);
-    }).catch(function(err) {
-      next(err);
-    });
+        .json(results);
+    }
+  });
 }
 
 //=============================================================================
