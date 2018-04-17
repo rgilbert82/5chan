@@ -115,7 +115,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Rou
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return BoardContent; });\nclass BoardContent {\n  constructor(props) {\n    this.props = props;\n\n    this.render               = this.render.bind(this);\n    this.bindEventListeners   = this.bindEventListeners.bind(this);\n    this.removeEventListeners = this.removeEventListeners.bind(this);\n    this.setupComponent       = this.setupComponent.bind(this);\n\n    this.setupComponent();\n  }\n\n  setupComponent() {\n    this.render();\n  }\n\n  bindEventListeners() {\n    // todo\n  }\n\n  removeEventListeners() {\n    // todo\n  }\n\n  render() {\n    const parent = document.getElementById('board_content');\n    const content = `\n      <div>\n        <ul>\n          <li>Temp post 1</li>\n          <li>Temp post 2</li>\n          <li>Temp post 3</li>\n        </ul>\n      </div>\n    `;\n\n    parent.innerHTML = content;\n  }\n}\n\n\n//# sourceURL=webpack:///./public/javascripts/Components/BoardPage/BoardContent.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return BoardContent; });\n/* harmony import */ var _Posts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Posts */ \"./public/javascripts/Components/Posts/index.js\");\n/* harmony import */ var _services_api_posts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/api/posts */ \"./public/javascripts/services/api/posts/index.js\");\n\n\n\nclass BoardContent {\n  constructor(props) {\n    this.props = props;\n    this.state = {\n      posts: [],\n      postComponents: []\n    }\n\n    this.render               = this.render.bind(this);\n    this.renderPosts          = this.renderPosts.bind(this);\n    this.bindEventListeners   = this.bindEventListeners.bind(this);\n    this.removeEventListeners = this.removeEventListeners.bind(this);\n    this.fetchPosts           = this.fetchPosts.bind(this);\n    this.nothingHere          = this.nothingHere.bind(this);\n    this.setupComponent       = this.setupComponent.bind(this);\n\n    this.setupComponent();\n  }\n\n  setupComponent() {\n    this.render();\n    this.fetchPosts();\n  }\n\n  bindEventListeners() {\n    // todo\n  }\n\n  removeEventListeners() {\n    this.state.postComponents.forEach((component) => {\n      component.removeEventListeners();\n    });\n  }\n\n  fetchPosts() {\n    return Object(_services_api_posts__WEBPACK_IMPORTED_MODULE_1__[\"getPostsAPI\"])(this.props.board.id)\n      .then((data) => {\n        if (data.length > 0) {\n          this.state.posts = data;\n          this.renderPosts();\n        } else {\n          this.nothingHere();\n        }\n      }).catch(() => {\n        this.props.displayMessage('There was an error loading this page');\n      });\n  }\n\n  nothingHere() {\n    const list    = document.getElementById('board_posts_list');\n    const content = `\n      <p class=\"nothing_here\">This board has no posts yet. Post something!</p>\n    ` ;\n\n    list.innerHTML = content;\n  }\n\n  renderPosts() {\n    let components = [];\n\n    this.state.posts.forEach((post) => {\n      const props = {\n        post: post,\n        navigate: this.props.navigate,\n        displayMessage: this.props.displayMessage\n      }\n      components.push(new _Posts__WEBPACK_IMPORTED_MODULE_0__[\"PostListItem\"](props));\n    });\n\n    this.state.postComponents = components;\n  }\n\n  render() {\n    const parent = document.getElementById('board_content');\n    const content = `\n      <div>\n        <ul id=\"board_posts_list\">\n        </ul>\n      </div>\n    `;\n\n    parent.innerHTML = content;\n  }\n}\n\n\n//# sourceURL=webpack:///./public/javascripts/Components/BoardPage/BoardContent.js?");
 
 /***/ }),
 
@@ -251,6 +251,54 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Ind
 
 /***/ }),
 
+/***/ "./public/javascripts/Components/Posts/CommentListItem.js":
+/*!****************************************************************!*\
+  !*** ./public/javascripts/Components/Posts/CommentListItem.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return CommentListItem; });\nclass CommentListItem {\n  constructor(props) {\n    this.props = props;\n\n    this.render         = this.render.bind(this);\n    this.setupComponent = this.setupComponent.bind(this);\n\n    this.setupComponent();\n  }\n\n  setupComponent() {\n    this.render();\n  }\n\n  render() {\n    const parent = document.getElementById(this.props.parentElement).getElementsByClassName('comments_list')[0];\n    const date   = new Date(this.props.comment.created_at).toUTCString();\n    let child    = document.createElement('LI');\n\n    console.log(parent);\n\n    child.className = 'comment_list_item';\n    child.innerHTML = `\n      <div>\n        <div class=\"comment_list_item_header_bar\"></div>\n        <div class=\"inner_comment\">\n          <h3><b>${this.props.comment.username}</b> on <small>${date}</small></h3>\n          <p>${this.props.comment.body}</p>\n        </div>\n      </div>\n    `;\n\n    parent.appendChild(child);\n  }\n}\n\n\n//# sourceURL=webpack:///./public/javascripts/Components/Posts/CommentListItem.js?");
+
+/***/ }),
+
+/***/ "./public/javascripts/Components/Posts/CommentsList.js":
+/*!*************************************************************!*\
+  !*** ./public/javascripts/Components/Posts/CommentsList.js ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return CommentsList; });\n/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! . */ \"./public/javascripts/Components/Posts/index.js\");\n/* harmony import */ var _services_api_comments__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/api/comments */ \"./public/javascripts/services/api/comments/index.js\");\n\n\n\nclass CommentsList {\n  constructor(props) {\n    this.props = props;\n    this.state = {\n      comments: [],\n      commentComponents: []\n    }\n\n    this.render               = this.render.bind(this);\n    this.renderComments       = this.renderComments.bind(this);\n    this.bindEventListeners   = this.bindEventListeners.bind(this);\n    this.removeEventListeners = this.removeEventListeners.bind(this);\n    this.fetchComments        = this.fetchComments.bind(this);\n    this.setupComponent       = this.setupComponent.bind(this);\n\n    this.setupComponent();\n  }\n\n  setupComponent() {\n    this.render();\n    this.fetchComments();\n  }\n\n  bindEventListeners() {\n    // todo\n  }\n\n  removeEventListeners() {\n    // todo\n  }\n\n  fetchComments() {\n    return Object(_services_api_comments__WEBPACK_IMPORTED_MODULE_1__[\"getCommentsAPI\"])(this.props.post.id)\n      .then((data) => {\n        console.log(data);\n        this.state.comments = data;\n        this.renderComments();\n      }).catch(() => {\n        console.log(this.props.post);\n        this.props.displayMessage('There was an error loading this page');\n      });\n  }\n\n  renderComments() {\n    let components = [];\n\n    this.state.comments.forEach((comment) => {\n      components.push(new ___WEBPACK_IMPORTED_MODULE_0__[\"CommentListItem\"]({ parentElement: this.props.parentElement, comment: comment }));\n    });\n\n    this.state.commentComponents = components;\n  }\n\n  render() {\n    const parent = document.getElementById(this.props.parentElement).getElementsByClassName('comments_list_wrapper')[0];\n    const child  = `\n      <ul class=\"comments_list\">\n      </ul>\n    `;\n\n    parent.innerHTML = child;\n  }\n}\n\n\n//# sourceURL=webpack:///./public/javascripts/Components/Posts/CommentsList.js?");
+
+/***/ }),
+
+/***/ "./public/javascripts/Components/Posts/PostListItem.js":
+/*!*************************************************************!*\
+  !*** ./public/javascripts/Components/Posts/PostListItem.js ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return PostListItem; });\n/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! . */ \"./public/javascripts/Components/Posts/index.js\");\n\n\nclass PostListItem {\n  constructor(props) {\n    this.props = props;\n    this.state = {\n      children: []\n    }\n\n    this.render               = this.render.bind(this);\n    this.bindEventListeners   = this.bindEventListeners.bind(this);\n    this.removeEventListeners = this.removeEventListeners.bind(this);\n    this.setupCommentsList    = this.setupCommentsList.bind(this);\n    this.setupComponent       = this.setupComponent.bind(this);\n\n    this.setupComponent();\n  }\n\n  setupComponent() {\n    this.render();\n    this.setupCommentsList();\n  }\n\n  bindEventListeners() {\n    // todo\n  }\n\n  removeEventListeners() {\n    this.state.children.forEach((child) => {\n      child.removeEventListeners();\n    });\n  }\n\n  setupCommentsList() {\n    const props = {\n      post: this.props.post,\n      parentElement: `board_post_list_item_${this.props.post.id}`,\n      navigate: this.props.navigate,\n      displayMessage: this.props.displayMessage\n    }\n\n    this.state.children = this.state.children.concat([\n      new ___WEBPACK_IMPORTED_MODULE_0__[\"CommentsList\"](props)\n    ]);\n  }\n\n  render() {\n    const parent = document.getElementById('board_posts_list');\n    const date   = new Date(this.props.post.created_at).toUTCString();\n    let child    = document.createElement('LI');\n\n    child.className = 'board_post_list_item';\n    child.id        = `board_post_list_item_${this.props.post.id}`;\n    child.innerHTML = `\n      <div>\n        <div class=\"post_list_item_header_bar\"></div>\n        <div class=\"inner_post\">\n          <h3><b>${this.props.post.username}</b> on <small>${date}</small></h3>\n          <p>${this.props.post.body}</p>\n          <div class=\"comments_list_wrapper\"></div>\n        </div>\n      </div>\n    ` ;\n\n    parent.insertBefore(child, parent.childNodes[0]);\n  }\n}\n\n\n//# sourceURL=webpack:///./public/javascripts/Components/Posts/PostListItem.js?");
+
+/***/ }),
+
+/***/ "./public/javascripts/Components/Posts/index.js":
+/*!******************************************************!*\
+  !*** ./public/javascripts/Components/Posts/index.js ***!
+  \******************************************************/
+/*! exports provided: PostListItem, CommentsList, CommentListItem */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _PostListItem_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PostListItem.js */ \"./public/javascripts/Components/Posts/PostListItem.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"PostListItem\", function() { return _PostListItem_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"]; });\n\n/* harmony import */ var _CommentsList_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CommentsList.js */ \"./public/javascripts/Components/Posts/CommentsList.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"CommentsList\", function() { return _CommentsList_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"]; });\n\n/* harmony import */ var _CommentListItem_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CommentListItem.js */ \"./public/javascripts/Components/Posts/CommentListItem.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"CommentListItem\", function() { return _CommentListItem_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"]; });\n\n\n\n\n\n\n//# sourceURL=webpack:///./public/javascripts/Components/Posts/index.js?");
+
+/***/ }),
+
 /***/ "./public/javascripts/main.js":
 /*!************************************!*\
   !*** ./public/javascripts/main.js ***!
@@ -296,6 +344,54 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ 
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _getBoardsAPI_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getBoardsAPI.js */ \"./public/javascripts/services/api/boards/getBoardsAPI.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"getBoardsAPI\", function() { return _getBoardsAPI_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"]; });\n\n/* harmony import */ var _getBoardAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getBoardAPI.js */ \"./public/javascripts/services/api/boards/getBoardAPI.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"getBoardAPI\", function() { return _getBoardAPI_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"]; });\n\n\n\n\n\n//# sourceURL=webpack:///./public/javascripts/services/api/boards/index.js?");
+
+/***/ }),
+
+/***/ "./public/javascripts/services/api/comments/getCommentsAPI.js":
+/*!********************************************************************!*\
+  !*** ./public/javascripts/services/api/comments/getCommentsAPI.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = ((postID) => {\n  return new Promise((resolve, reject) => {\n    const path  = `/api/posts/${postID}/comments`;\n    let request = new XMLHttpRequest();\n\n    request.onreadystatechange = () => {\n      if (request.readyState === XMLHttpRequest.DONE) {\n        if (request.status === 200) {\n          resolve(JSON.parse(request.responseText));\n        } else {\n          reject(request.responseText);\n        }\n      }\n    }\n\n    request.open('GET', path);\n    request.send();\n  });\n});\n\n\n//# sourceURL=webpack:///./public/javascripts/services/api/comments/getCommentsAPI.js?");
+
+/***/ }),
+
+/***/ "./public/javascripts/services/api/comments/index.js":
+/*!***********************************************************!*\
+  !*** ./public/javascripts/services/api/comments/index.js ***!
+  \***********************************************************/
+/*! exports provided: getCommentsAPI */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _getCommentsAPI_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getCommentsAPI.js */ \"./public/javascripts/services/api/comments/getCommentsAPI.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"getCommentsAPI\", function() { return _getCommentsAPI_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"]; });\n\n\n\n\n//# sourceURL=webpack:///./public/javascripts/services/api/comments/index.js?");
+
+/***/ }),
+
+/***/ "./public/javascripts/services/api/posts/getPostsAPI.js":
+/*!**************************************************************!*\
+  !*** ./public/javascripts/services/api/posts/getPostsAPI.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = ((boardID) => {\n  return new Promise((resolve, reject) => {\n    const path  = `/api/boards/${boardID}/posts`;\n    let request = new XMLHttpRequest();\n\n    request.onreadystatechange = () => {\n      if (request.readyState === XMLHttpRequest.DONE) {\n        if (request.status === 200) {\n          resolve(JSON.parse(request.responseText));\n        } else {\n          reject(request.responseText);\n        }\n      }\n    }\n\n    request.open('GET', path);\n    request.send();\n  });\n});\n\n\n//# sourceURL=webpack:///./public/javascripts/services/api/posts/getPostsAPI.js?");
+
+/***/ }),
+
+/***/ "./public/javascripts/services/api/posts/index.js":
+/*!********************************************************!*\
+  !*** ./public/javascripts/services/api/posts/index.js ***!
+  \********************************************************/
+/*! exports provided: getPostsAPI */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _getPostsAPI_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getPostsAPI.js */ \"./public/javascripts/services/api/posts/getPostsAPI.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"getPostsAPI\", function() { return _getPostsAPI_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"]; });\n\n\n\n\n//# sourceURL=webpack:///./public/javascripts/services/api/posts/index.js?");
 
 /***/ })
 

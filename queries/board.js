@@ -32,10 +32,26 @@ function getBoard(req, res, next) {
 }
 
 //=============================================================================
+
+function getBoardPosts(req, res, next) {
+  var boardID = req.params.id;
+  var sql = "SELECT * FROM posts WHERE board_id = $1;";
+
+  db.any(sql, [boardID])
+    .then(function(data) {
+      res.status(200)
+        .json(data);
+    }).catch(function(data) {
+      next(err);
+    });
+}
+
+//=============================================================================
 // EXPORTS
 //=============================================================================
 
 module.exports = {
   getAllBoards: getAllBoards,
-  getBoard: getBoard
+  getBoard: getBoard,
+  getBoardPosts: getBoardPosts
 }

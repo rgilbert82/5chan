@@ -17,6 +17,7 @@ CREATE TABLE posts (
   body TEXT NOT NULL,
   image VARCHAR(255),
   username VARCHAR(100) NOT NULL,
+  slug VARCHAR(100) NOT NULL,
   board_id INTEGER NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
