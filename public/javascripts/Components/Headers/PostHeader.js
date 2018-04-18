@@ -1,11 +1,17 @@
+import { PostForm } from '../Posts';
+
 export default class PostHeader {
   constructor(props) {
     this.props = props;
+    this.state = {
+      children: []
+    }
 
     this.render               = this.render.bind(this);
     this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
     this.navigateToBoard      = this.navigateToBoard.bind(this);
+    this.createComment        = this.createComment.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
 
     this.setupComponent();
@@ -24,6 +30,14 @@ export default class PostHeader {
   removeEventListeners() {
     const boardLink = document.getElementById('transition_to_board_link');
     boardLink.removeEventListener('click', this.navigateToBoard);
+
+    this.state.children.forEach((child) => {
+      child.removeEventListeners();
+    });
+  }
+
+  createComment(comment) {
+    // todo
   }
 
   navigateToBoard(e) {
@@ -35,13 +49,22 @@ export default class PostHeader {
 
   render() {
     const parent  = document.getElementById('page_header');
+    const props   = {
+      navigate: this.props.navigate,
+      displayMessage: this.props.displayMessage,
+      createPost: this.createComment,
+      comment: true
+    };
     const content = `
       <div>
         <h2><a id="transition_to_board_link" href="">/${this.props.board.slug}/ - ${this.props.board.title}</a></h2>
         <p>Post a Reply</p>
+        <div id="form_wrapper">
+        </div>
       </div>
     `
 
-    parent.innerHTML = content;
+    parent.innerHTML    = content;
+    this.state.children = this.state.children.concat([ new PostForm(props) ]);
   }
 }
