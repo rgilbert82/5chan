@@ -4,13 +4,13 @@ export default class BoardHeader {
   constructor(props) {
     this.props = props;
     this.state = {
-      children: []
+      postForm: null
     };
 
     this.render               = this.render.bind(this);
     this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
-    this.createPost           = this.createPost.bind(this);
+    this.toggleForm           = this.toggleForm.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
 
     this.setupComponent();
@@ -25,13 +25,11 @@ export default class BoardHeader {
   }
 
   removeEventListeners() {
-    this.state.children.forEach((child) => {
-      child.removeEventListeners();
-    });
+    if (this.state.postForm) { this.state.postForm.removeEventListeners(); }
   }
 
-  createPost(post) {
-    // todo
+  toggleForm() {
+    if (this.state.postForm) { this.state.postForm.toggleForm(); }
   }
 
   render() {
@@ -39,7 +37,7 @@ export default class BoardHeader {
     const props   = {
       navigate: this.props.navigate,
       displayMessage: this.props.displayMessage,
-      createPost: this.createPost,
+      createPost: this.props.createPost,
       comment: false
     };
     const content = `
@@ -51,6 +49,6 @@ export default class BoardHeader {
     `
 
     parent.innerHTML = content;
-    this.state.children = this.state.children.concat([ new PostForm(props) ]);
+    this.state.postForm = new PostForm(props);
   }
 }

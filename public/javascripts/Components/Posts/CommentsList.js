@@ -10,8 +10,8 @@ export default class CommentsList {
     }
 
     this.render               = this.render.bind(this);
-    this.renderComments       = this.renderComments.bind(this);
-    this.bindEventListeners   = this.bindEventListeners.bind(this);
+    this.renderAllComments    = this.renderAllComments.bind(this);
+    this.renderSingleComment  = this.renderSingleComment.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
     this.fetchComments        = this.fetchComments.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
@@ -24,25 +24,27 @@ export default class CommentsList {
     this.fetchComments();
   }
 
-  bindEventListeners() {
-    // todo
-  }
-
   removeEventListeners() {
-    // todo
+    this.state.commentComponents.forEach((component) => {
+      component.removeEventListeners();
+    });
   }
 
   fetchComments() {
     return getCommentsAPI(this.props.post.id)
       .then((data) => {
         this.state.comments = data;
-        this.renderComments();
+        this.renderAllComments();
       }).catch(() => {
         this.props.displayMessage('There was an error loading this page');
       });
   }
 
-  renderComments() {
+  renderSingleComment(commentData) {
+    this.state.commentComponents = this.state.commentComponents.concat([ new CommentListItem({ parentElement: this.props.parentElement, comment: commentData }) ]);
+  }
+
+  renderAllComments() {
     let components = [];
 
     this.state.comments.forEach((comment) => {

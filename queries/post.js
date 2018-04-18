@@ -59,10 +59,30 @@ function getPostComments(req, res, next) {
 }
 
 //=============================================================================
+
+function createPost(req, res, next) {
+  var board_id    = req.body.board_id;
+  var username    = req.body.username;
+  var body        = req.body.body.trim();
+  var image       = req.body.image;
+  var randomSlug  = randomString(20);
+  var sql = "INSERT INTO posts (board_id, username, body, image, slug) VALUES ($1, $2, $3, $4, $5) returning *;";
+
+  db.one(sql, [board_id, username, body, image, randomSlug])
+    .then(function(data) {
+      res.status(200)
+        .json(data);
+    }).catch(function(err) {
+      next(err);
+    });
+}
+
+//=============================================================================
 // EXPORTS
 //=============================================================================
 
 module.exports = {
+  createPost: createPost,
   getPost: getPost,
   getPostComments: getPostComments
 }

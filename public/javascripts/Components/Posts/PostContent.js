@@ -4,12 +4,13 @@ export default class PostContent {
   constructor(props) {
     this.props = props;
     this.state = {
-      children: []
+      commentsList: null
     }
 
     this.render               = this.render.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
     this.setupCommentsList    = this.setupCommentsList.bind(this);
+    this.renderSingleComment  = this.renderSingleComment.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
 
     this.setupComponent();
@@ -21,9 +22,13 @@ export default class PostContent {
   }
 
   removeEventListeners() {
-    this.state.children.forEach((child) => {
-      child.removeEventListeners();
-    });
+    if (this.state.commentsList) { this.state.commentsList.removeEventListeners(); }
+  }
+
+  renderSingleComment(commentData) {
+    if (this.state.commentsList) {
+      this.state.commentsList.renderSingleComment(commentData);
+    }
   }
 
   setupCommentsList() {
@@ -34,9 +39,7 @@ export default class PostContent {
       displayMessage: this.props.displayMessage
     }
 
-    this.state.children = this.state.children.concat([
-      new CommentsList(props)
-    ]);
+    this.state.commentsList = new CommentsList(props);
   }
 
   render() {

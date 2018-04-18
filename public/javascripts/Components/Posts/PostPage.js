@@ -1,6 +1,8 @@
-import { PostHeader }  from '../Headers';
-import { PostContent } from '../Posts';
-import { getPostAPI }  from '../../services/api/posts';
+import { PostHeader }       from '../Headers';
+import { PostContent }      from '../Posts';
+import { uploadPhotoAPI }   from '../../services/aws';
+import { getPostAPI }       from '../../services/api/posts';
+import { createCommentAPI } from '../../services/api/comments';
 
 export default class PostPage {
   constructor(props) {
@@ -8,13 +10,16 @@ export default class PostPage {
     this.state = {
       post: {},
       board: {},
-      children: []
+      postHeader:  null,
+      postContent: null
     };
 
     this.render               = this.render.bind(this);
-    this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
     this.fetchPost            = this.fetchPost.bind(this);
+    this.createComment        = this.createComment.bind(this);
+    this.uploadPhoto          = this.uploadPhoto.bind(this);
+    this.addCommentToPost     = this.addCommentToPost.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
 
     this.setupComponent();
@@ -25,16 +30,9 @@ export default class PostPage {
     this.fetchPost();
   }
 
-  bindEventListeners() {
-    // todo
-  }
-
   removeEventListeners() {
-    this.state.children.forEach((child) => {
-      child.removeEventListeners();
-    });
-
-    this.state.children = [];
+    if (this.state.postHeader)  { this.state.postHeader.removeEventListeners(); }
+    if (this.state.postContent) { this.state.postContent.removeEventListeners(); }
   }
 
   fetchPost() {
@@ -45,18 +43,45 @@ export default class PostPage {
         const props   = {
           post: data.post,
           board: data.board,
-          navigate: this.props.navigate,
-          displayMessage: this.props.displayMessage
+          navigate:       this.props.navigate,
+          displayMessage: this.props.displayMessage,
+          createPost:     this.uploadPhoto
         }
-        const header  = new PostHeader(props);
-        const content = new PostContent(props);
 
+        this.state.postHeader  = new PostHeader(props);
+        this.state.postContent = new PostContent(props);
         this.state.post     = data.post;
         this.state.board    = data.board;
-        this.state.children = this.state.children.concat([ header, content ]);
       }).catch((err) => {
         this.props.displayMessage('There was an error loading this page');
       });
+  }
+
+  createComment(commentData) {
+    return createCommentAPI(commentData)
+      .then((data) => {
+        this.state.postHeader.toggleForm();
+        this.addCommentToPost(data);
+      }).catch((err) => {
+        this.props.displayMessage('There was an error creating your comment');
+      });
+  }
+
+  uploadPhoto(commentData) {
+    return uploadPhotoAPI()
+      .then((photoPath) => {
+        commentData.image   = photoPath;
+        commentData.post_id = this.state.post.id;
+        this.createComment(commentData);
+      }).catch((err) => {
+        this.props.displayMessage('There was an error uploading your image');
+      });
+  }
+
+  addCommentToPost(commentData) {
+    if (this.state.postContent) {
+      this.state.postContent.renderSingleComment(commentData);
+    }
   }
 
   render() {

@@ -10,7 +10,8 @@ export default class BoardContent {
     }
 
     this.render               = this.render.bind(this);
-    this.renderPosts          = this.renderPosts.bind(this);
+    this.renderSinglePost     = this.renderSinglePost.bind(this);
+    this.renderAllPosts       = this.renderAllPosts.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
     this.fetchPosts           = this.fetchPosts.bind(this);
     this.nothingHere          = this.nothingHere.bind(this);
@@ -35,7 +36,7 @@ export default class BoardContent {
       .then((data) => {
         if (data.length > 0) {
           this.state.posts = data;
-          this.renderPosts();
+          this.renderAllPosts();
         } else {
           this.nothingHere();
         }
@@ -53,7 +54,16 @@ export default class BoardContent {
     list.innerHTML = content;
   }
 
-  renderPosts() {
+  renderSinglePost(postData) {
+    const props = {
+      post: postData,
+      navigate: this.props.navigate,
+      displayMessage: this.props.displayMessage
+    }
+    this.state.postComponents = [ new PostListItem(props) ].concat(this.state.postComponents);
+  }
+
+  renderAllPosts() {
     let components = [];
 
     this.state.posts.forEach((post) => {

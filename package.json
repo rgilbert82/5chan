@@ -9,10 +9,12 @@
   },
   "dependencies": {
     "async": "^2.6.0",
+    "aws-sdk": "^2.224.1",
     "bluebird": "^3.5.1",
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
+    "dotenv": "^5.0.1",
     "express": "~4.15.2",
     "morgan": "~1.8.1",
     "pg-promise": "^7.3.2",

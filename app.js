@@ -5,9 +5,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var boards = require('./routes/api/boards');
-var posts = require('./routes/api/posts');
+var index    = require('./routes/index');
+var boards   = require('./routes/api/boards');
+var posts    = require('./routes/api/posts');
+var comments = require('./routes/api/comments');
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/api/boards', boards);
 app.use('/api/posts', posts);
+app.use('/api/comments', comments);
 app.use('/*', index);
 
 // catch 404 and forward to error handler

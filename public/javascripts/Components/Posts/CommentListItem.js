@@ -2,14 +2,19 @@ export default class CommentListItem {
   constructor(props) {
     this.props = props;
 
-    this.render         = this.render.bind(this);
-    this.setupComponent = this.setupComponent.bind(this);
+    this.render               = this.render.bind(this);
+    this.removeEventListeners = this.removeEventListeners.bind(this);
+    this.setupComponent       = this.setupComponent.bind(this);
 
     this.setupComponent();
   }
 
   setupComponent() {
     this.render();
+  }
+
+  removeEventListeners() {
+    // todo
   }
 
   render() {

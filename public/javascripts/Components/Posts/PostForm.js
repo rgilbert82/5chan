@@ -11,6 +11,7 @@ export default class PostForm {
     this.updateSubmitButton   = this.updateSubmitButton.bind(this);
     this.submitForm           = this.submitForm.bind(this);
     this.toggleForm           = this.toggleForm.bind(this);
+    this.toggleFormFromLink   = this.toggleFormFromLink.bind(this);
     this.clearForm            = this.clearForm.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
 
@@ -28,7 +29,7 @@ export default class PostForm {
     const form        = document.getElementById('new_post_form');
 
     for (let i = 0; i < toggleLinks.length; i++) {
-      toggleLinks[i].addEventListener('click', this.toggleForm);
+      toggleLinks[i].addEventListener('click', this.toggleFormFromLink);
     }
     formBody.addEventListener('input', this.updateSubmitButton);
     form.addEventListener('submit', this.submitForm);
@@ -40,15 +41,13 @@ export default class PostForm {
     const form        = document.getElementById('new_post_form');
 
     for (let i = 0; i < toggleLinks.length; i++) {
-      toggleLinks[i].removeEventListener('click', this.toggleForm);
+      toggleLinks[i].removeEventListener('click', this.toggleFormFromLink);
     }
     formBody.removeEventListener('input', this.updateSubmitButton);
     form.removeEventListener('submit', this.submitForm);
   }
 
-  toggleForm(e) {
-    e.preventDefault();
-
+  toggleForm() {
     const openForm = document.getElementById('open_form');
     const formDiv  = document.getElementById('new_post_form');
 
@@ -61,6 +60,11 @@ export default class PostForm {
       openForm.style.display = 'none';
       formDiv.style.display  = 'block';
     }
+  }
+
+  toggleFormFromLink(e) {
+    e.preventDefault();
+    this.toggleForm();
   }
 
   clearForm() {
@@ -90,8 +94,10 @@ export default class PostForm {
 
     this.clearForm();
 
-    console.log(username);
-    console.log(body);
+    this.props.createPost({
+      username: username,
+      body: body
+    });
   }
 
   render() {
