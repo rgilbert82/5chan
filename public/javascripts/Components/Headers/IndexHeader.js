@@ -13,7 +13,7 @@ export default class IndexHeader {
   render() {
     const headerContainer = document.getElementById('page_header');
     const content = `
-      <div>
+      <div id="index_header">
         <h1>5chan</h1>
       </div>
     `;

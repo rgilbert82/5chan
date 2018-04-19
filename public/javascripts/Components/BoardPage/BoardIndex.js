@@ -85,7 +85,7 @@ export default class BoardIndex {
     const header    = document.getElementById('page_header');
     const main      = document.getElementById('main');
     const headerContent = `
-      <p>Loading...</p>
+      <p class="page_loading">Loading...</p>
     `;
     const mainContent = `
       <section id="board_content">

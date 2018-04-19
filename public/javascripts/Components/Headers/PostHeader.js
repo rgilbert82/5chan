@@ -54,7 +54,8 @@ export default class PostHeader {
       comment: true
     };
     const content = `
-      <div>
+      <div id="board_header">
+        <div id="board_header_logo_box">5chan</div>
         <h2><a id="transition_to_board_link" href="">/${this.props.board.slug}/ - ${this.props.board.title}</a></h2>
         <div id="form_wrapper">
         </div>

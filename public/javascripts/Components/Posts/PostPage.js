@@ -90,7 +90,7 @@ export default class PostPage {
     const header    = document.getElementById('page_header');
     const main      = document.getElementById('main');
     const headerContent = `
-      <p>Loading...</p>
+      <p class="page_loading">Loading...</p>
     `;
     const mainContent = `
       <section id="page_content">

@@ -41,7 +41,8 @@ export default class BoardHeader {
       comment: false
     };
     const content = `
-      <div>
+      <div id="board_header">
+        <div id="board_header_logo_box">5chan</div>
         <h2>/${this.props.board.slug}/ - ${this.props.board.title}</h2>
         <div id="form_wrapper">
         </div>

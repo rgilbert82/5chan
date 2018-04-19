@@ -62,7 +62,9 @@ export default class HeaderNav {
   render() {
     const headerNav = document.getElementById('header_nav');
     const content   = `
-      <ul id="header_nav_list"></ul>
+      <div>
+        <ul id="header_nav_list"></ul>
+      </div>
     `;
 
     headerNav.innerHTML = content;

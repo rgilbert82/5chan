@@ -61,14 +61,23 @@ export default class PostListItem {
     const parent = document.getElementById('board_posts_list');
     const date   = new Date(this.props.post.created_at).toUTCString();
     let child    = document.createElement('LI');
+    let imageDiv;
 
     child.className = 'board_post_list_item';
     child.id        = `board_post_list_item_${this.props.post.id}`;
+
+    if (!!this.props.post.image) {
+      imageDiv = `<div class="post_image"><img src="${this.props.post.image}"></img></div>`;
+    } else {
+      imageDiv = '';
+    }
+
     child.innerHTML = `
       <div>
         <div class="post_list_item_header_bar"></div>
         <div class="inner_post">
-          <div>
+          ${imageDiv}
+          <div class="post_list_item_details">
             <h3><b>${this.props.post.username}</b> on <small>${date}</small></h3>
             <span class="post_reply_link_wrapper">[<a class="post_reply_link" href="#">reply</a>]</span>
           </div>

@@ -122,8 +122,10 @@ export default class PostForm {
           <label for="form_file">Image File</label>
           <input id="form_file" class="form-control" type="file" accept="image/*"/>
         </div>
-        <button disabled="true" id="form_submit_button" class="btn btn-dark">Post</button>
-        <span>[<a href="#" class="form_toggle">hide</a>]</span>
+        <div class="form-group form_button_box">
+          <button disabled="true" id="form_submit_button" class="btn btn-light">Post</button>
+          <span>[<a href="#" class="form_toggle">hide</a>]</span>
+        </div>
       </form>
     ` ;
 

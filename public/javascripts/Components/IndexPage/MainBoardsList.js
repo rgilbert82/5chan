@@ -58,6 +58,7 @@ export default class MainBoardsList {
   render() {
     const parent  = document.getElementById('index_boards');
     const content = `
+      <h2>Boards</h2>
       <ul id="index_boards_list">
       </ul>
     `;
