@@ -278,6 +278,14 @@ ul {
 .comment_list_item + .comment_list_item {
   margin-top: 5px;
 }
+.show_all_comments_inner {
+  margin-top: 10px;
+}
+
+.show_all_comments_inner span {
+  font-size: 12px;
+  color: #777;
+}
 
 .board_post_list_item,
 #post_page_content {
@@ -397,7 +405,8 @@ ul {
   margin-left: 8px;
 }
 
-.toggle_list_item_view {
+.toggle_list_item_view,
+.toggle_comments_list {
   font-size: 12px;
   padding: 0 3px;
   font-weight: bold;
@@ -407,7 +416,8 @@ ul {
   border-radius: 4px;
 }
 
-.toggle_list_item_view:hover {
+.toggle_list_item_view:hover,
+.toggle_comments_list:hover {
   cursor: pointer;
   background-color: red!important;
 }

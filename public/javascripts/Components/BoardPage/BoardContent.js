@@ -55,11 +55,18 @@ export default class BoardContent {
   }
 
   renderSinglePost(postData) {
+    const list = document.getElementById('board_posts_list');
+
     const props = {
       post: postData,
       navigate: this.props.navigate,
       displayMessage: this.props.displayMessage
     }
+
+    if (this.state.postComponents.length === 0) {
+      list.innerHTML = '';
+    }
+
     this.state.postComponents = [ new PostListItem(props) ].concat(this.state.postComponents);
   }
 
