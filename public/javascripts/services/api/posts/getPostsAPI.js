@@ -1,6 +1,6 @@
 export default (boardID) => {
   return new Promise((resolve, reject) => {
-    const path  = `/api/boards/${boardID}/posts`;
+    const path  = `/api/boards/${boardID}/posts${location.search}`;
     let request = new XMLHttpRequest();
 
     request.onreadystatechange = () => {

@@ -35,7 +35,7 @@ export default class BoardContent {
     return getPostsAPI(this.props.board.id)
       .then((data) => {
         if (data.length > 0) {
-          this.state.posts = data;
+          this.state.posts = data.reverse();
           this.renderAllPosts();
         } else {
           this.nothingHere();

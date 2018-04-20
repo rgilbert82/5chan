@@ -35,12 +35,54 @@ ul {
   padding: 20px;
 }
 
+.nothing_here {
+  margin-top: 50px;
+  text-align: center;
+  font-size: 18px;
+}
+
 .hidden {
   display: none;
 }
 
 .opaque {
   opacity: 0.5;
+}
+
+#paginator_list {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f0e0d6;
+  border: 1px solid #d9bfb7;
+  list-style: none;
+}
+
+.pagintor_list_item {
+  color: #800;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.pagintor_list_item + .pagintor_list_item {
+  margin-left: 5px;
+}
+
+.pagintor_list_item span,
+.pagintor_list_item_links {
+  font-weight: bold;
+}
+
+.pagintor_list_item span {
+  font-weight: bold;
+}
+
+.pagintor_list_item_links {
+  color: #00e;
+}
+
+.pagintor_list_item_links:hover {
+  text-decoration: none;
+  color: red!important;
 }
 
 /* Error Message */

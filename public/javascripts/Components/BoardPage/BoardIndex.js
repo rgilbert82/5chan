@@ -1,5 +1,6 @@
 import { BoardContent }             from '.';
 import { BoardHeader, ForumHeader } from '../Headers';
+import { Paginator }                from '../../App';
 import { uploadPhotoAPI }           from '../../services/aws';
 import { createPostAPI }            from '../../services/api/posts';
 import { getBoardAPI }              from '../../services/api/boards';
@@ -10,7 +11,8 @@ export default class BoardIndex {
     this.state = {
       boardHeader:  null,
       boardContent: null,
-      board: {}
+      paginator:    null,
+      board:        {}
     };
 
     this.render               = this.render.bind(this);
@@ -32,6 +34,7 @@ export default class BoardIndex {
   removeEventListeners() {
     if (this.state.boardHeader)  { this.state.boardHeader.removeEventListeners(); }
     if (this.state.boardContent) { this.state.boardContent.removeEventListeners(); }
+    if (this.state.paginator)    { this.state.paginator.removeEventListeners(); }
   }
 
   fetchBoard() {
@@ -40,15 +43,18 @@ export default class BoardIndex {
       .then((data) => {
         const props   = {
           board:          data,
+          pageCount:      Math.ceil(data.post_count / 10),
           navigate:       this.props.navigate,
           displayMessage: this.props.displayMessage,
           createPost:     this.uploadPhoto
         }
 
+        this.state.board        = data;
         this.state.boardHeader  = new BoardHeader(props);
         this.state.boardContent = new BoardContent(props);
-        this.state.board        = data;
+        this.state.paginator    = new Paginator(props);
       }).catch((err) => {
+        console.log(err);
         this.props.displayMessage('There was an error loading this page');
       });
   }
@@ -90,6 +96,8 @@ export default class BoardIndex {
     const mainContent = `
       <section id="board_content">
       </section>
+      <div id="paginator">
+      </div>
     `;
 
     document.title   = `5chan - /${boardSlug}/`;

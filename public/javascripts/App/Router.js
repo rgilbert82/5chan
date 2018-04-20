@@ -60,7 +60,7 @@ export default class Router {
   }
 
   loadPage() {
-    const path = location.pathname;
+    const path = location.pathname + location.search;
     const pageProps = {
       navigate: this.navigate,
       redirectHome: this.redirectHome,
@@ -74,7 +74,7 @@ export default class Router {
     if (path === '/') {                                         // Home
       this.removeHeaderNav();
       this.currentPage = new IndexMain(pageProps);
-    } else if (path.match(/^\/boards\/\w+$/)) {                 // Board Page
+    } else if (path.match(/^\/boards\/\w+(\?.+){0,}$/)) {       // Board Page
       this.setupHeaderNav();
       this.currentPage = new BoardIndex(pageProps);
     } else if (path.match(/^\/boards\/\w+\/thread\/\w+$/)) {    // Post Page
