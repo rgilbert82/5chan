@@ -1,5 +1,5 @@
-import { adminLoginAPI } from '../services/api/admins';
-import { setToken }      from '../services/admins';
+import { adminLoginAPI } from '../../services/api/admins';
+import { setToken }      from '../../services/admins';
 
 export default class AdminLoginPage {
   constructor(props) {

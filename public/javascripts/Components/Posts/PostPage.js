@@ -1,5 +1,5 @@
-import { PostHeader }       from '../Headers';
 import { PostContent }      from '../Posts';
+import { PostHeader }       from '../Headers';
 import { uploadPhotoAPI }   from '../../services/aws';
 import { getPostAPI }       from '../../services/api/posts';
 import { createCommentAPI } from '../../services/api/comments';

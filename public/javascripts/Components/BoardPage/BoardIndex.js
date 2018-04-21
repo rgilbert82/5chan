@@ -1,5 +1,5 @@
 import { BoardContent }             from '.';
-import { Paginator }                from '../../App';
+import { Paginator }                from '../App';
 import { BoardHeader, ForumHeader } from '../Headers';
 import { uploadPhotoAPI }           from '../../services/aws';
 import { createPostAPI }            from '../../services/api/posts';

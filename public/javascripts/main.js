@@ -1,4 +1,4 @@
-import { Router } from './App';
+import { Router } from './Components/App';
 
 export default class MainApp {
   constructor() {

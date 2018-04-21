@@ -1,10 +1,10 @@
 import { AdminLoginPage, MessageBox, FooterLink } from '.';
-import { getAdminAPI, adminLogoutAPI } from '../services/api/admins';
-import { deleteToken, getToken } from '../services/admins';
-import { HeaderNav }  from '../Components/Headers';
-import { IndexMain }  from '../Components/IndexPage';
-import { BoardIndex } from '../Components/BoardPage';
-import { PostPage }   from '../Components/Posts';
+import { getAdminAPI, adminLogoutAPI } from '../../services/api/admins';
+import { deleteToken, getToken } from '../../services/admins';
+import { HeaderNav }  from '../Headers';
+import { IndexMain }  from '../IndexPage';
+import { BoardIndex } from '../BoardPage';
+import { PostPage }   from '../Posts';
 
 export default class Router {
   constructor() {
