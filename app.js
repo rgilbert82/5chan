@@ -9,6 +9,7 @@ var index    = require('./routes/index');
 var boards   = require('./routes/api/boards');
 var posts    = require('./routes/api/posts');
 var comments = require('./routes/api/comments');
+var admins   = require('./routes/api/admins');
 
 var app = express();
 
@@ -25,12 +26,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Credentials", true);
+//   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,UPDATE,DELETE");
+//   res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Authorization, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+//   next();
+// });
+
 // Routes
 
 app.use('/', index);
 app.use('/api/boards', boards);
 app.use('/api/posts', posts);
 app.use('/api/comments', comments);
+app.use('/api/admins', admins);
 app.use('/*', index);
 
 // catch 404 and forward to error handler

@@ -31,6 +31,7 @@ export default class IndexMain {
     this.state.childComponents.forEach((child) => {
       child.removeEventListeners();
     });
+    this.state.childComponents = [];
   }
 
   render() {

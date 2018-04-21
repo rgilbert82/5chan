@@ -16,3 +16,6 @@ INSERT INTO boards (title, slug)
     ('Television & Film', 'tv'),
     ('Travel', 'trv'),
     ('Video Games', 'v');
+
+INSERT INTO admins (username, password, token)
+  VALUES ('admin', '$2y$10$un/NW92DlB/uo2/2bb83guzmcztGNnYUeTZgOk44gZU7BlSitvxya', 'asflakshfqowifhqowifhoifalskj');

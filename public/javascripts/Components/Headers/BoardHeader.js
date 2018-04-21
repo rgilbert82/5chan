@@ -8,7 +8,6 @@ export default class BoardHeader {
     };
 
     this.render               = this.render.bind(this);
-    this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
     this.toggleForm           = this.toggleForm.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
@@ -18,10 +17,6 @@ export default class BoardHeader {
 
   setupComponent() {
     this.render();
-  }
-
-  bindEventListeners() {
-    // todo
   }
 
   removeEventListeners() {

@@ -1,6 +1,6 @@
 import { BoardContent }             from '.';
-import { BoardHeader, ForumHeader } from '../Headers';
 import { Paginator }                from '../../App';
+import { BoardHeader, ForumHeader } from '../Headers';
 import { uploadPhotoAPI }           from '../../services/aws';
 import { createPostAPI }            from '../../services/api/posts';
 import { getBoardAPI }              from '../../services/api/boards';

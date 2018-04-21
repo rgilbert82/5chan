@@ -566,8 +566,26 @@ footer {
 
 footer p {
   margin: 0;
-  line-height: 60px;
+  line-height: 40px;
   font-size: 12px;
+}
+
+#admin_link_login,
+#admin_link_logout {
+  line-height: 20px;
+}
+
+/* Admin Login Page */
+
+#admin_login_page {
+  margin: 0 auto;
+  padding: 30px 20px;
+  max-width: 600px;
+  text-align: center;
+}
+
+#admin_login_form label {
+  font-size: 20px;
 }
 
 /* Breakpoints */

@@ -1,4 +1,6 @@
-import { MessageBox } from '.';
+import { AdminLoginPage, MessageBox, FooterLink } from '.';
+import { getAdminAPI, adminLogoutAPI } from '../services/api/admins';
+import { deleteToken, getToken } from '../services/admins';
 import { HeaderNav }  from '../Components/Headers';
 import { IndexMain }  from '../Components/IndexPage';
 import { BoardIndex } from '../Components/BoardPage';
@@ -6,8 +8,12 @@ import { PostPage }   from '../Components/Posts';
 
 export default class Router {
   constructor() {
-    this.currentPage     = null;
-    this.headerNav       = null;
+    this.state = {
+      loggedIn:    false,
+      currentPage: null,
+      headerNav:   null,
+      footerLink:  null
+    };
 
     this.bindEvents      = this.bindEvents.bind(this);
     this.loadPage        = this.loadPage.bind(this);
@@ -16,8 +22,19 @@ export default class Router {
     this.displayMessage  = this.displayMessage.bind(this);
     this.setupHeaderNav  = this.setupHeaderNav.bind(this);
     this.removeHeaderNav = this.removeHeaderNav.bind(this);
+    this.setToLoggedIn   = this.setToLoggedIn.bind(this);
+    this.setToLoggedOut  = this.setToLoggedOut.bind(this);
+    this.logoutSettings  = this.logoutSettings.bind(this);
+    this.setupFooterLink = this.setupFooterLink.bind(this);
+    this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
+    this.setupRouter     = this.setupRouter.bind(this);
 
+    this.setupRouter();
+  }
+
+  setupRouter() {
     this.bindEvents();
+    this.checkIfLoggedIn();
   }
 
   bindEvents() {
@@ -30,22 +47,72 @@ export default class Router {
     new MessageBox({ message: message });
   }
 
+  checkIfLoggedIn() {
+    if (!!getToken()) {
+      return getAdminAPI()
+        .then((data) => {
+          this.setToLoggedIn();
+        }).catch((err) => {
+          this.logoutSettings();
+        });
+    } else {
+      this.setupFooterLink();
+    }
+  }
+
   setupHeaderNav() {
     const pageProps = {
       navigate: this.navigate,
       displayMessage: this.displayMessage
     }
 
-    if (!this.headerNav) {
-      this.headerNav = new HeaderNav(pageProps);
+    if (!this.state.headerNav) {
+      this.state.headerNav = new HeaderNav(pageProps);
     }
   }
 
   removeHeaderNav() {
-    if (this.headerNav) {
-      this.headerNav.removeEventListeners();
-      this.headerNav = null;
+    if (this.state.headerNav) {
+      this.state.headerNav.removeEventListeners();
+      this.state.headerNav = null;
       document.getElementById('header_nav').innerHTML = '';
+    }
+  }
+
+  setupFooterLink() {
+    if (this.state.footerLink) {
+      this.state.footerLink.removeEventListeners();
+    }
+
+    this.state.footerLink = new FooterLink({
+      loggedIn: this.state.loggedIn,
+      navigate: this.navigate,
+      setToLoggedOut: this.setToLoggedOut
+    });
+  }
+
+  setToLoggedIn() {
+    this.state.loggedIn = true;
+    this.setupFooterLink();
+  }
+
+  setToLoggedOut() {
+    return adminLogoutAPI()
+      .then(() => {
+        this.logoutSettings();
+      }).catch((err) => {
+        this.logoutSettings();
+        console.log(err);
+      });
+  }
+
+  logoutSettings() {
+    deleteToken();
+    this.state.loggedIn = false;
+    this.setupFooterLink();
+
+    if (location.pathname !== '/') {
+      this.redirectHome();
     }
   }
 
@@ -62,24 +129,30 @@ export default class Router {
   loadPage() {
     const path = location.pathname + location.search;
     const pageProps = {
+      loggedIn: this.state.loggedIn,
       navigate: this.navigate,
       redirectHome: this.redirectHome,
-      displayMessage: this.displayMessage
+      displayMessage: this.displayMessage,
+      setToLoggedIn: this.setToLoggedIn,
+      setToLoggedOut: this.setToLoggedOut
     }
 
-    if (this.currentPage) {
-      this.currentPage.removeEventListeners();
+    if (this.state.currentPage) {
+      this.state.currentPage.removeEventListeners();
     }
 
     if (path === '/') {                                         // Home
       this.removeHeaderNav();
-      this.currentPage = new IndexMain(pageProps);
+      this.state.currentPage = new IndexMain(pageProps);
     } else if (path.match(/^\/boards\/\w+(\?.+){0,}$/)) {       // Board Page
       this.setupHeaderNav();
-      this.currentPage = new BoardIndex(pageProps);
+      this.state.currentPage = new BoardIndex(pageProps);
     } else if (path.match(/^\/boards\/\w+\/thread\/\w+$/)) {    // Post Page
       this.setupHeaderNav();
-      this.currentPage = new PostPage(pageProps);
+      this.state.currentPage = new PostPage(pageProps);
+    } else if (path.match(/^\/admin-login$/)) {                 // Admin Login page
+      this.setupHeaderNav();
+      this.state.currentPage = new AdminLoginPage(pageProps);
     } else {                                                    // Redirect home for bad routes
       this.redirectHome();
     }

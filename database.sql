@@ -38,3 +38,12 @@ CREATE TABLE comments (
 ALTER TABLE comments ADD CONSTRAINT comments_post_id_fkey
   FOREIGN KEY (post_id) REFERENCES posts (id)
   ON DELETE CASCADE;
+
+CREATE TABLE admins (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(100) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  token    VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  UNIQUE(username)
+);
