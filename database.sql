@@ -1,7 +1,7 @@
-DROP DATABASE IF EXISTS fivechan;
-CREATE DATABASE fivechan;
-
-\c fivechan;
+-- DROP DATABASE IF EXISTS fivechan;
+-- CREATE DATABASE fivechan;
+--
+-- \c fivechan;
 
 CREATE TABLE boards (
   id SERIAL PRIMARY KEY,
