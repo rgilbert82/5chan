@@ -1,16 +1,20 @@
-import { CommentsList } from '.';
+import { CommentsList } from   '.';
+import { deletePostAPI } from  '../../services/api/posts';
+import { deletePhotoAPI } from '../../services/aws';
 
 export default class PostListItem {
   constructor(props) {
     this.props = props;
     this.state = {
-      children: []
+      children: [],
+      isMounted: true
     }
 
     this.render               = this.render.bind(this);
     this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
     this.navigateToPostPage   = this.navigateToPostPage.bind(this);
+    this.deletePost           = this.deletePost.bind(this);
     this.toggleListItem       = this.toggleListItem.bind(this);
     this.toggleImageSize      = this.toggleImageSize.bind(this);
     this.setupCommentsList    = this.setupCommentsList.bind(this);
@@ -26,33 +30,65 @@ export default class PostListItem {
   }
 
   bindEventListeners() {
-    const imageWrapper = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('post_image')[0];
-    const replyLink    = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('post_reply_link')[0];
-    const toggleButton = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('toggle_list_item_view')[0];
+    if (this.state.isMounted) {
+      const imageWrapper = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('post_image')[0];
+      const replyLink    = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('post_reply_link')[0];
+      const deleteLink   = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('delete_post_link')[0];
+      const toggleButton = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('toggle_list_item_view')[0];
 
-    if (imageWrapper) {
-      imageWrapper.getElementsByTagName('img')[0].addEventListener('click', this.toggleImageSize);
+      if (imageWrapper) {
+        imageWrapper.getElementsByTagName('img')[0].addEventListener('click', this.toggleImageSize);
+      }
+
+      if (deleteLink) {
+        deleteLink.addEventListener('click', this.deletePost);
+      }
+
+      replyLink.addEventListener('click', this.navigateToPostPage);
+      toggleButton.addEventListener('click', this.toggleListItem);
     }
-
-    replyLink.addEventListener('click', this.navigateToPostPage);
-    toggleButton.addEventListener('click', this.toggleListItem);
   }
 
   removeEventListeners() {
-    const imageWrapper = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('post_image')[0];
-    const replyLink    = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('post_reply_link')[0];
-    const toggleButton = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('toggle_list_item_view')[0];
+    if (this.state.isMounted) {
+      const imageWrapper = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('post_image')[0];
+      const replyLink    = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('post_reply_link')[0];
+      const deleteLink   = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('delete_post_link')[0];
+      const toggleButton = document.getElementById(`board_post_list_item_${this.props.post.id}`).getElementsByClassName('toggle_list_item_view')[0];
 
-    if (imageWrapper) {
-      imageWrapper.getElementsByTagName('img')[0].removeEventListener('click', this.toggleImageSize);
+      if (imageWrapper) {
+        imageWrapper.getElementsByTagName('img')[0].removeEventListener('click', this.toggleImageSize);
+      }
+
+      if (deleteLink) {
+        deleteLink.removeEventListener('click', this.deletePost);
+      }
+
+      replyLink.removeEventListener('click', this.navigateToPostPage);
+      toggleButton.removeEventListener('click', this.toggleListItem);
+
+      this.state.children.forEach((child) => {
+        child.removeEventListeners();
+      });
     }
+  }
 
-    replyLink.removeEventListener('click', this.navigateToPostPage);
-    toggleButton.removeEventListener('click', this.toggleListItem);
+  deletePost(e) {
+    e.preventDefault();
 
-    this.state.children.forEach((child) => {
-      child.removeEventListeners();
-    });
+    return deletePostAPI(this.props.post.id)
+      .then(() => {
+        this.removeEventListeners();
+        document.getElementById(`board_post_list_item_${this.props.post.id}`).remove();
+        this.state.isMounted = false;
+        
+        if (!!this.props.post.image) {
+          let image = this.props.post.image.replace('https://rg-5chan.s3.amazonaws.com/', '');
+          deletePhotoAPI(image);
+        }
+      }).catch(() => {
+        this.props.displayMessage('There was an error deleting the post');
+      });
   }
 
   toggleListItem(e) {
@@ -76,10 +112,11 @@ export default class PostListItem {
 
   setupCommentsList() {
     const props = {
-      post: this.props.post,
-      parentElement: `board_post_list_item_${this.props.post.id}`,
-      navigate: this.props.navigate,
-      displayMessage: this.props.displayMessage
+      post:           this.props.post,
+      loggedIn:       this.props.loggedIn,
+      navigate:       this.props.navigate,
+      displayMessage: this.props.displayMessage,
+      parentElement: `board_post_list_item_${this.props.post.id}`
     }
 
     this.state.children = this.state.children.concat([
@@ -95,9 +132,10 @@ export default class PostListItem {
   }
 
   render() {
-    const parent = document.getElementById('board_posts_list');
-    const date   = new Date(this.props.post.created_at).toUTCString();
-    let child    = document.createElement('LI');
+    const parent   = document.getElementById('board_posts_list');
+    const date     = new Date(this.props.post.created_at).toUTCString();
+    let child      = document.createElement('LI');
+    let removeLink = '';
     let imageDiv;
     let fileName;
 
@@ -110,6 +148,12 @@ export default class PostListItem {
     } else {
       imageDiv = '';
       fileName = '<i>no file</i>';
+    }
+
+    if (!!this.props.loggedIn) {
+      removeLink = `
+        <a href="#" class="delete_post_link">Delete</a>
+      `;
     }
 
     child.innerHTML = `
@@ -127,6 +171,7 @@ export default class PostListItem {
           </div>
           <p>${this.props.post.body}</p>
           <div class="comments_list_wrapper"></div>
+          ${removeLink}
         </div>
       </div>
     ` ;

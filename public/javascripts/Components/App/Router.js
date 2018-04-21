@@ -21,6 +21,7 @@ export default class Router {
     this.initialPageLoad = this.initialPageLoad.bind(this);
     this.navigate        = this.navigate.bind(this);
     this.redirectHome    = this.redirectHome.bind(this);
+    this.redirectToBoard = this.redirectToBoard.bind(this);
     this.displayMessage  = this.displayMessage.bind(this);
     this.removeMessage   = this.removeMessage.bind(this);
     this.setupHeaderNav  = this.setupHeaderNav.bind(this);
@@ -126,6 +127,11 @@ export default class Router {
     this.loadPage();
   }
 
+  redirectToBoard(path) {
+    history.replaceState({}, path, path);
+    this.loadPage();
+  }
+
   initialPageLoad() {
     if (!!getToken()) {
       return getAdminAPI()
@@ -144,12 +150,13 @@ export default class Router {
   loadPage() {
     const path = location.pathname + location.search;
     const pageProps = {
-      loggedIn:       this.state.loggedIn,
-      navigate:       this.navigate,
-      redirectHome:   this.redirectHome,
-      displayMessage: this.displayMessage,
-      setToLoggedIn:  this.setToLoggedIn,
-      setToLoggedOut: this.setToLoggedOut
+      loggedIn:        this.state.loggedIn,
+      navigate:        this.navigate,
+      redirectHome:    this.redirectHome,
+      redirectToBoard: this.redirectToBoard,
+      displayMessage:  this.displayMessage,
+      setToLoggedIn:   this.setToLoggedIn,
+      setToLoggedOut:  this.setToLoggedOut
     }
 
     this.removeMessage();

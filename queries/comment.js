@@ -1,5 +1,6 @@
 var db = require('../database.js');
 var randomString = require('../helpers/randomString.js');
+var async = require('async');
 
 //=============================================================================
 // QUERIES
@@ -22,9 +23,49 @@ function createComment(req, res, next) {
 }
 
 //=============================================================================
+
+function deleteComment(req, res, next) {
+  var cookie = req.headers.authorization;
+  var token  = cookie ? cookie.replace('token=', '') : '';
+  var commentID = req.params.id;
+
+  async.waterfall([
+    // Verify admin is logged in
+    function(callback) {
+      var sql = "SELECT * FROM admins WHERE token = $1;";
+      db.one(sql, [token])
+        .then(function(data) {
+          callback(null, data);
+        }).catch(function(err) {
+          callback(err, null);
+        });
+    },
+    // Then delete the comment
+    function(admin, callback) {
+      var sql = 'DELETE FROM comments WHERE id = $1;';
+      db.result(sql, [commentID])
+        .then(function(data) {
+          callback(null, { status: 'success', message: 'comment deleted' });
+        }).catch(function(err) {
+          callback(err, null);
+        });
+    }
+  ],
+  function(err, results) {
+    if (err) {
+      return next(err);
+    } else {
+      res.status(200)
+        .json(results);
+    }
+  });
+}
+
+//=============================================================================
 // EXPORTS
 //=============================================================================
 
 module.exports = {
-  createComment: createComment
+  createComment: createComment,
+  deleteComment: deleteComment
 }

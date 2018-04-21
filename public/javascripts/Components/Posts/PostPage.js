@@ -41,11 +41,14 @@ export default class PostPage {
     return getPostAPI(postSlug)
       .then((data) => {
         const props   = {
-          post: data.post,
-          board: data.board,
-          navigate:       this.props.navigate,
-          displayMessage: this.props.displayMessage,
-          createPost:     this.uploadPhoto
+          post:            data.post,
+          board:           data.board,
+          loggedIn:        this.props.loggedIn,
+          navigate:        this.props.navigate,
+          redirectHome:    this.props.redirectHome,
+          redirectToBoard: this.props.redirectToBoard,
+          displayMessage:  this.props.displayMessage,
+          createPost:      this.uploadPhoto
         }
 
         this.state.postHeader  = new PostHeader(props);

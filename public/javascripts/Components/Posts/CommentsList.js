@@ -17,6 +17,7 @@ export default class CommentsList {
     this.renderSingleComment  = this.renderSingleComment.bind(this);
     this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
+    this.removeComment        = this.removeComment.bind(this);
     this.clearCommentsList    = this.clearCommentsList.bind(this);
     this.fetchComments        = this.fetchComments.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
@@ -71,15 +72,36 @@ export default class CommentsList {
     showAll.innerHTML = '';
   }
 
+  removeComment(id) {
+    this.state.comments = this.state.comments.filter((comment) => {
+      return comment.id !== id;
+    });
+    this.rerender();
+  }
+
   renderSingleComment(commentData) {
-    this.state.commentComponents = this.state.commentComponents.concat([ new CommentListItem({ parentElement: this.props.parentElement, comment: commentData }) ]);
+    this.state.commentComponents = this.state.commentComponents.concat(
+      [ new CommentListItem({
+        parentElement:  this.props.parentElement,
+        loggedIn:       this.props.loggedIn,
+        displayMessage: this.props.displayMessage,
+        removeComment:  this.removeComment,
+        comment:        commentData
+      })
+    ]);
   }
 
   renderAllComments() {
     let components = [];
 
     this.state.comments.forEach((comment) => {
-      components.push(new CommentListItem({ parentElement: this.props.parentElement, comment: comment }));
+      components.push(new CommentListItem({
+        parentElement:  this.props.parentElement,
+        loggedIn:       this.props.loggedIn,
+        displayMessage: this.props.displayMessage,
+        removeComment:  this.removeComment,
+        comment:        comment
+      }));
     });
 
     this.state.commentComponents = components;
@@ -96,7 +118,13 @@ export default class CommentsList {
     let components = [];
 
     this.state.comments.slice(-this.state.showThisManyComments).forEach((comment) => {
-      components.push(new CommentListItem({ parentElement: this.props.parentElement, comment: comment }));
+      components.push(new CommentListItem({
+        parentElement:  this.props.parentElement,
+        loggedIn:       this.props.loggedIn,
+        displayMessage: this.props.displayMessage,
+        removeComment:  this.removeComment,
+        comment:        comment
+      }));
     });
 
     showAllWrapper.innerHTML = showAllBar;

@@ -44,6 +44,7 @@ export default class BoardIndex {
         const props   = {
           board:          data,
           pageCount:      Math.ceil(data.post_count / 10),
+          loggedIn:       this.props.loggedIn,
           navigate:       this.props.navigate,
           displayMessage: this.props.displayMessage,
           createPost:     this.uploadPhoto

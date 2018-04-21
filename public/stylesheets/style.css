@@ -422,6 +422,19 @@ ul {
   background-color: red!important;
 }
 
+.delete_post_link,
+.delete_comment_link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #00e;
+}
+
+.delete_post_link:hover,
+.delete_comment_link:hover {
+  color: red!important;
+  text-decoration: none;
+}
+
 /* Post Form */
 
 #form_wrapper {

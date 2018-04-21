@@ -58,8 +58,9 @@ export default class BoardContent {
     const list = document.getElementById('board_posts_list');
 
     const props = {
-      post: postData,
-      navigate: this.props.navigate,
+      post:           postData,
+      loggedIn:       this.props.loggedIn,
+      navigate:       this.props.navigate,
       displayMessage: this.props.displayMessage
     }
 
@@ -75,8 +76,9 @@ export default class BoardContent {
 
     this.state.posts.forEach((post) => {
       const props = {
-        post: post,
-        navigate: this.props.navigate,
+        post:           post,
+        loggedIn:       this.props.loggedIn,
+        navigate:       this.props.navigate,
         displayMessage: this.props.displayMessage
       }
       components.push(new PostListItem(props));

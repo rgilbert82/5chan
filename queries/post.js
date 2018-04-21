@@ -78,11 +78,51 @@ function createPost(req, res, next) {
 }
 
 //=============================================================================
+
+function deletePost(req, res, next) {
+  var cookie = req.headers.authorization;
+  var token  = cookie ? cookie.replace('token=', '') : '';
+  var postID = req.params.id;
+
+  async.waterfall([
+    // Verify admin is logged in
+    function(callback) {
+      var sql = "SELECT * FROM admins WHERE token = $1;";
+      db.one(sql, [token])
+        .then(function(data) {
+          callback(null, data);
+        }).catch(function(err) {
+          callback(err, null);
+        });
+    },
+    // Then delete the post
+    function(admin, callback) {
+      var sql = 'DELETE FROM posts WHERE id = $1;';
+      db.result(sql, [postID])
+        .then(function(data) {
+          callback(null, { status: 'success', message: 'post deleted' });
+        }).catch(function(err) {
+          callback(err, null);
+        });
+    }
+  ],
+  function(err, results) {
+    if (err) {
+      return next(err);
+    } else {
+      res.status(200)
+        .json(results);
+    }
+  });
+}
+
+//=============================================================================
 // EXPORTS
 //=============================================================================
 
 module.exports = {
   createPost: createPost,
   getPost: getPost,
-  getPostComments: getPostComments
+  getPostComments: getPostComments,
+  deletePost: deletePost
 }
