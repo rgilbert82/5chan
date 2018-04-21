@@ -54,8 +54,8 @@ export default class BoardIndex {
         this.state.boardContent = new BoardContent(props);
         this.state.paginator    = new Paginator(props);
       }).catch((err) => {
-        console.log(err);
-        this.props.displayMessage('There was an error loading this page');
+        document.getElementById('page_header').innerHTML = '';
+        this.props.displayMessage('Oops! There seems to be nothing here.');
       });
   }
 

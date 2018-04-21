@@ -53,7 +53,8 @@ export default class PostPage {
         this.state.post     = data.post;
         this.state.board    = data.board;
       }).catch((err) => {
-        this.props.displayMessage('There was an error loading this page');
+        document.getElementById('page_header').innerHTML = '';
+        this.props.displayMessage('Oops! There seems to be nothing here.');
       });
   }
 

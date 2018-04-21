@@ -5,6 +5,7 @@ export default class MessageBox {
     this.render               = this.render.bind(this);
     this.bindEventListeners   = this.bindEventListeners.bind(this);
     this.removeEventListeners = this.removeEventListeners.bind(this);
+    this.removeMessage        = this.removeMessage.bind(this);
     this.closeMessageWindow   = this.closeMessageWindow.bind(this);
     this.setupComponent       = this.setupComponent.bind(this);
 
@@ -28,7 +29,10 @@ export default class MessageBox {
 
   closeMessageWindow(e) {
     e.preventDefault();
+    this.props.removeMessage();
+  }
 
+  removeMessage() {
     this.removeEventListeners();
     document.getElementById('message_box').innerHTML = '';
   }

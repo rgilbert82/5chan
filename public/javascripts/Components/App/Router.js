@@ -12,7 +12,8 @@ export default class Router {
       loggedIn:    false,
       currentPage: null,
       headerNav:   null,
-      footerLink:  null
+      footerLink:  null,
+      message:     null
     };
 
     this.bindEvents      = this.bindEvents.bind(this);
@@ -21,6 +22,7 @@ export default class Router {
     this.navigate        = this.navigate.bind(this);
     this.redirectHome    = this.redirectHome.bind(this);
     this.displayMessage  = this.displayMessage.bind(this);
+    this.removeMessage   = this.removeMessage.bind(this);
     this.setupHeaderNav  = this.setupHeaderNav.bind(this);
     this.removeHeaderNav = this.removeHeaderNav.bind(this);
     this.setToLoggedIn   = this.setToLoggedIn.bind(this);
@@ -44,7 +46,18 @@ export default class Router {
   }
 
   displayMessage(message) {
-    new MessageBox({ message: message });
+    this.removeMessage();
+    this.state.message = new MessageBox({
+      message: message,
+      removeMessage: this.removeMessage
+    });
+  }
+
+  removeMessage() {
+    if (this.state.message) {
+      this.state.message.removeMessage();
+      this.state.message = null;
+    }
   }
 
   setupHeaderNav() {
@@ -138,6 +151,8 @@ export default class Router {
       setToLoggedIn:  this.setToLoggedIn,
       setToLoggedOut: this.setToLoggedOut
     }
+
+    this.removeMessage();
 
     if (this.state.currentPage) {
       this.state.currentPage.removeEventListeners();
