@@ -16,12 +16,8 @@ export default class AdminLoginPage {
   }
 
   setupComponent() {
-    if (this.props.loggedIn) {
-      this.props.redirectHome();
-    } else {
-      this.render();
-      this.bindEventListeners();
-    }
+    this.render();
+    this.bindEventListeners();
   }
 
   bindEventListeners() {
@@ -88,7 +84,7 @@ export default class AdminLoginPage {
       </div>
     `;
 
-    document.title       = '5chan';
+    document.title       = '5chan - Admin Login';
     pageHeader.innerHTML = headerContent;
     main.innerHTML       = content;
   }

@@ -17,6 +17,7 @@ export default class Router {
 
     this.bindEvents      = this.bindEvents.bind(this);
     this.loadPage        = this.loadPage.bind(this);
+    this.initialPageLoad = this.initialPageLoad.bind(this);
     this.navigate        = this.navigate.bind(this);
     this.redirectHome    = this.redirectHome.bind(this);
     this.displayMessage  = this.displayMessage.bind(this);
@@ -26,7 +27,6 @@ export default class Router {
     this.setToLoggedOut  = this.setToLoggedOut.bind(this);
     this.logoutSettings  = this.logoutSettings.bind(this);
     this.setupFooterLink = this.setupFooterLink.bind(this);
-    this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
     this.setupRouter     = this.setupRouter.bind(this);
 
     this.setupRouter();
@@ -34,7 +34,7 @@ export default class Router {
 
   setupRouter() {
     this.bindEvents();
-    this.checkIfLoggedIn();
+    this.initialPageLoad();
   }
 
   bindEvents() {
@@ -45,19 +45,6 @@ export default class Router {
 
   displayMessage(message) {
     new MessageBox({ message: message });
-  }
-
-  checkIfLoggedIn() {
-    if (!!getToken()) {
-      return getAdminAPI()
-        .then((data) => {
-          this.setToLoggedIn();
-        }).catch((err) => {
-          this.logoutSettings();
-        });
-    } else {
-      this.setupFooterLink();
-    }
   }
 
   setupHeaderNav() {
@@ -126,14 +113,29 @@ export default class Router {
     this.loadPage();
   }
 
+  initialPageLoad() {
+    if (!!getToken()) {
+      return getAdminAPI()
+        .then((data) => {
+          this.setToLoggedIn();
+          this.loadPage();
+        }).catch((err) => {
+          this.logoutSettings();
+        });
+    } else {
+      this.setupFooterLink();
+      this.loadPage();
+    }
+  }
+
   loadPage() {
     const path = location.pathname + location.search;
     const pageProps = {
-      loggedIn: this.state.loggedIn,
-      navigate: this.navigate,
-      redirectHome: this.redirectHome,
+      loggedIn:       this.state.loggedIn,
+      navigate:       this.navigate,
+      redirectHome:   this.redirectHome,
       displayMessage: this.displayMessage,
-      setToLoggedIn: this.setToLoggedIn,
+      setToLoggedIn:  this.setToLoggedIn,
       setToLoggedOut: this.setToLoggedOut
     }
 
@@ -151,8 +153,12 @@ export default class Router {
       this.setupHeaderNav();
       this.state.currentPage = new PostPage(pageProps);
     } else if (path.match(/^\/admin-login$/)) {                 // Admin Login page
-      this.setupHeaderNav();
-      this.state.currentPage = new AdminLoginPage(pageProps);
+      if (this.state.loggedIn) {
+        this.redirectHome();
+      } else {
+        this.setupHeaderNav();
+        this.state.currentPage = new AdminLoginPage(pageProps);
+      }
     } else {                                                    // Redirect home for bad routes
       this.redirectHome();
     }
