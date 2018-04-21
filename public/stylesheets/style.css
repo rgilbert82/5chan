@@ -1,3 +1,5 @@
+/* MAD STYLEZ YO */
+
 /* General */
 
 * {
@@ -201,6 +203,7 @@ ul {
 #index_boards ul li {
   display: inline-block;
   width: 33%;
+  vertical-align: top;
 }
 
 #index_boards ul a {
@@ -327,7 +330,7 @@ ul {
 }
 
 .post_image {
-  width: 270px;
+  max-width: 270px;
   float: left;
   padding: 0 25px 10px 0;
 }
@@ -451,7 +454,7 @@ ul {
 #new_post_form .form-group {
   margin: 0 auto 6px auto;
   display: block;
-  width: 505px;
+  max-width: 505px;
 }
 
 #new_post_form label,
@@ -472,7 +475,7 @@ ul {
 
 #new_post_form input,
 #new_post_form textarea {
-  width: 400px;
+  max-width: 400px;
   border-radius: 0;
   border: 1px solid #777;
 }
@@ -603,6 +606,34 @@ footer p {
 
 /* Breakpoints */
 
+@media (max-width: 620px) {
+  #new_post_form {
+    text-align: left;
+  }
+
+  #new_post_form label,
+  #new_post_form input,
+  #new_post_form textarea {
+    display: block;
+  }
+
+  #new_post_form label {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+
+  #new_post_form .btn.btn-light {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 550px) {
+  #index_boards ul li {
+    width: 49%;
+  }
+}
+
 @media (max-width: 440px) {
   #index_header h1 {
     padding-left: 40px;
@@ -610,5 +641,9 @@ footer p {
 
   #index_header h1:before {
     margin-left: -160px;
+  }
+
+  #index_boards ul li {
+    width: 100%;
   }
 }
