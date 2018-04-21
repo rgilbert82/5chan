@@ -18,4 +18,4 @@ INSERT INTO boards (title, slug)
     ('Video Games', 'v');
 
 INSERT INTO admins (username, password, token)
-  VALUES ('admin', '$2y$10$un/NW92DlB/uo2/2bb83guzmcztGNnYUeTZgOk44gZU7BlSitvxya', 'asflakshfqowifhqowifhoifalskj');
+  VALUES ('admin', '$2a$10$2BoVz5DEOMjSZNDgooQzS.sNMcJJ.4vS8He1flC8i9rfYxc4daumK', 'asflakshfqowifhqowifhoifalskj');
