@@ -255,6 +255,7 @@ ul {
 .inner_post {
   padding-left: 20px;
   padding-bottom: 20px;
+  overflow: hidden;
 }
 
 .board_post_list_item,
@@ -362,7 +363,7 @@ ul {
 
 .image_full_size {
   float: none;
-  width: 100%;
+  max-width: 100%;
   padding: 0 0 20px 0;
 }
 
